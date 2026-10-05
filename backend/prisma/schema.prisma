@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id               String            @id @default(uuid()) @db.Uuid
+  nameUser         String            @db.VarChar(255)
+  emailUser        String            @db.VarChar(255)
+  role             String            @db.VarChar(25)
+  profileImg       String?           @db.VarChar(255)
+  userFrom         String            @db.VarChar(255)
+  createdAt        DateTime          @default(now()) @db.Timestamptz()
+  reviews          Review[]
+  serviceProviders ServiceProvider[]
+}
+
+model ServiceProvider {
+  id               String            @id @default(uuid()) @db.Uuid
+  userId           String            @db.Uuid
+  name             String            @db.VarChar(255)
+  email            String?           @db.VarChar(255)
+  phone1           String?           @db.VarChar(255)
+  phone2           String?           @db.VarChar(255)
+  wp1              Boolean           @default(false)
+  wp2              Boolean           @default(false)
+  tg1              Boolean           @default(false)
+  tg2              Boolean           @default(false)
+  instaUrl         String?           @db.VarChar(255)
+  tiktokUrl        String?           @db.VarChar(255)
+  websiteUrl       String?           @db.VarChar(255)
+  address          String?           @db.VarChar(255)
+  rating           Decimal?          @db.Decimal(2, 1)
+  reviewCount      Int?
+  mapsUrl          String?           @db.VarChar(255)
+  reviews          Review[]
+  serviceOfferings ServiceOffering[]
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model ServiceOffering {
+  id          Int      @id @default(autoincrement())
+  tittle      String   @db.VarChar(255)
+  categoryId  String   @db.Uuid
+  providerId  String   @db.Uuid
+  price       Decimal? @db.Decimal(10, 2)
+  description String   @db.Text
+
+  category ServiceCategory @relation(fields: [categoryId], references: [id])
+  provider ServiceProvider @relation(fields: [providerId], references: [id])
+}
+
+model ServiceCategory {
+  id               String            @id @default(uuid()) @db.Uuid
+  name             String            @db.VarChar(255)
+  iconUrl          String            @db.VarChar(255)
+  serviceOfferings ServiceOffering[]
+}
+
+model Review {
+  id         Int      @id @default(autoincrement())
+  rating     Decimal  @db.Decimal(2, 1)
+  autorId    String   @db.Uuid
+  providerId String   @db.Uuid
+  comment    String   @db.Text
+  createdAt  DateTime @default(now()) @db.Timestamptz()
+
+  autor    User            @relation(fields: [autorId], references: [id])
+  provider ServiceProvider @relation(fields: [providerId], references: [id])
+}
