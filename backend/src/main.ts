@@ -1,3 +1,5 @@
+// Carga las variables del .env (DATABASE_URL, PORT...) antes que cualquier otro módulo
+import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';

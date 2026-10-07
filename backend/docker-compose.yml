@@ -1,0 +1,16 @@
+services:
+  db: # nombre del servicio
+    image: postgres:17 # imagen:versión
+    container_name: askuae-db # nombre visible en `docker ps`
+    restart: unless-stopped # se reinicia solo si Docker se reinicia
+    environment:
+      POSTGRES_USER: ${DB_USER} # ${...} variables de mi .env
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5444:5444" # "puerto_de_tu_pc:puerto_del_contenedor"
+    volumes:
+      - askuae_pgdata:/var/lib/postgresql/data # ruta para Postgres ≤ 17
+
+volumes:
+  askuae_pgdata:
