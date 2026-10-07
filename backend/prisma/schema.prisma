@@ -6,13 +6,21 @@ datasource db {
   provider = "postgresql"
 }
 
+enum AuthProvider {
+  GOOGLE
+  MICROSOFT
+  APPLE
+  EMAIL
+}
+
 model User {
   id               String            @id @default(uuid()) @db.Uuid
+  firebaseUid      String            @unique @db.VarChar(255)
   nameUser         String            @db.VarChar(255)
-  emailUser        String            @db.VarChar(255)
-  role             String            @db.VarChar(25)
+  emailUser        String            @unique @db.VarChar(255)
+  role             String            @default("user") @db.VarChar(25)
   profileImg       String?           @db.VarChar(255)
-  userFrom         String            @db.VarChar(255)
+  authProvider     AuthProvider
   createdAt        DateTime          @default(now()) @db.Timestamptz()
   reviews          Review[]
   serviceProviders ServiceProvider[]
@@ -44,7 +52,7 @@ model ServiceProvider {
 
 model ServiceOffering {
   id          Int      @id @default(autoincrement())
-  tittle      String   @db.VarChar(255)
+  title       String   @db.VarChar(255)
   categoryId  String   @db.Uuid
   providerId  String   @db.Uuid
   price       Decimal? @db.Decimal(10, 2)
