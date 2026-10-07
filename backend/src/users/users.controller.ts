@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -19,7 +20,7 @@ export class UsersController {
   // acá el controlador recibe los datos en formato json en DTO verifica que tengan la estructura correcta
   create(@Body() createUserDto: CreateUserDto) {
     // el servicio toma estos datos y le dice a prisma que los guarde
-    return this.usersService.create(createUserDto);
+    return this.usersService.createUser(createUserDto);
   }
 
   @Get()
@@ -29,16 +30,20 @@ export class UsersController {
 
   @Get(':emailUser')
   findOne(@Param('emailUser') emailUser: string) {
-    return this.usersService.findOne(emailUser);
+    return this.usersService.findUser(emailUser);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(id, updateUserDto);
+  update(
+    // valida que el id tenga formato UUID; si no, responde 400 en vez de que Postgres falle con un 500" describe mejor lo que hace
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    return this.usersService.updateUser(id, updateUserDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(id);
+  remove(@Param('id', ParseUUIDPipe) id: string) {
+    return this.usersService.removeUser(id);
   }
 }

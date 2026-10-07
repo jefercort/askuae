@@ -1,24 +1,36 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUrl,
+  MaxLength,
+} from 'class-validator';
+import { AuthProvider } from '@prisma/client';
 
 export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
+  @MaxLength(255)
   nameUser!: string;
 
-  @IsString()
   @IsNotEmpty()
   @IsEmail()
+  @MaxLength(255)
   emailUser!: string;
 
-  @IsString()
-  @IsNotEmpty()
-  role!: string;
-
-  @IsString()
+  @IsUrl()
   @IsOptional()
+  @MaxLength(255)
   profileImg?: string;
 
+  @IsNotEmpty()
+  @IsEnum(AuthProvider)
+  authProvider!: AuthProvider;
+
   @IsString()
   @IsNotEmpty()
-  userFrom!: string;
+  @MaxLength(255)
+  firebaseUid!: string;
 }
