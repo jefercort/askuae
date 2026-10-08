@@ -7,8 +7,8 @@ import { Pool } from 'pg';
 // cuando no aparece prismaClient es porque no se ha generado hay que usar npx prisma generate
 export class PrismaService
   extends PrismaClient
-  implements OnModuleInit, OnModuleDestroy {
-
+  implements OnModuleInit, OnModuleDestroy
+{
   constructor() {
     // 1. Creamos el Pool con tu URL
     const pool = new Pool({ connectionString: process.env.DATABASE_URL });

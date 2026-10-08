@@ -14,7 +14,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
   @Post()
   // acá el controlador recibe los datos en formato json en DTO verifica que tengan la estructura correcta
@@ -35,7 +35,7 @@ export class UsersController {
 
   @Patch(':id')
   update(
-    // valida que el id tenga formato UUID; si no, responde 400 en vez de que Postgres falle con un 500" describe mejor lo que hace
+    // valida que el id tenga formato UUID; si no, responde 400 en vez de que Postgres falle con un 500
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateUserDto: UpdateUserDto,
   ) {

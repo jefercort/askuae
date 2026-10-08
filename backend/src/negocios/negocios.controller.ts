@@ -13,7 +13,7 @@ import { UpdateNegocioDto } from './dto/update-negocio.dto';
 
 @Controller('negocios')
 export class NegociosController {
-  constructor(private readonly negociosService: NegociosService) { }
+  constructor(private readonly negociosService: NegociosService) {}
 
   @Post()
   create(@Body() createNegocioDto: CreateNegocioDto) {
