@@ -1,14 +1,12 @@
-import { onAuthStateChanged } from "firebase/auth";
-import React, { createContext, useEffect, useState } from "react";
+import { onAuthStateChanged, type User } from "firebase/auth";
+import React, { useEffect, useState } from "react";
 import { auth } from "../config/firebase";
+import { AuthContext } from "./AuthContext";
 
-// aca creo el contexto para poder usarlo luego
-export const AuthContext = createContext({ user: null, isLoading: true });
-
-// aca recibo el children en las props
+// aca recibo el children en las props y la llena: escucha a Firebase y guarda el usuario en el estado
 export function AuthProvider({ children }: { children: React.ReactNode }) {
 
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
