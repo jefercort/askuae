@@ -1,4 +1,8 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from '../prisma/prisma.service';
@@ -7,7 +11,7 @@ import { Prisma } from '@prisma/client';
 @Injectable()
 export class UsersService {
   // utilizo este constructor para que traiga todas las capcidades de PrismaService
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async createUser(createUserDto: CreateUserDto) {
     // aca uso el try catch porque si uso un if la respuesta nunca va a llegar y si hay un error no lo voy a detectar
@@ -21,7 +25,7 @@ export class UsersService {
         error instanceof Prisma.PrismaClientKnownRequestError &&
         error.code === 'P2002'
       ) {
-        throw new ConflictException('Ya existe un usuario con esos datos');
+        throw new ConflictException('Ya existe un usuario con esos datos'); //Error 409
       }
       // aca si a pesar de eso hay otro error que no se captura con el if entonces igual detiene la funcion
       throw error;
@@ -57,20 +61,36 @@ export class UsersService {
         error instanceof Prisma.PrismaClientKnownRequestError &&
         error.code === 'P2025'
       ) {
-        throw new NotFoundException('El usuario no existe para editarlo');
+        throw new NotFoundException('El usuario no existe para editarlo'); //Error 404
       }
-      // en caso que tuviera que se puediera editar el correo o el firebaseUid pero como no enotnces queda comentado
-      // if (
-      //   error instanceof Prisma.PrismaClientKnownRequestError &&
-      //   error.code === 'P2002'
-      // ) {
-      //   throw new ConflictException('Ya existe un usuario con ese correo');
-      // }
+      // si se vuelve editable un campo @unique, atrapar también P2002.
+
       throw error;
     }
   }
 
-  removeUser(id: string) {
-    return `This action removes a #${id} user`;
+  async removeUser(id: string) {
+    try {
+      return await this.prisma.user.delete({
+        where: {
+          id: id,
+        },
+      });
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new NotFoundException('El usuario no existe para eliminarlo');
+      } else if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2003'
+      ) {
+        throw new ConflictException(
+          'El usuario no se puede eliminar porque tiene reviews o comments registrados', //Error 409
+        );
+      }
+      throw error;
+    }
   }
 }
