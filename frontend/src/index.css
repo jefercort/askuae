@@ -109,3 +109,20 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+.btn {
+  display: inline-block;
+  /* permite darle padding y tamaño como a un botón */
+  padding: 8px 16px;
+  /* espacio interno: arriba/abajo y a los lados */
+  border: 1px solid #ccc;
+  /* el borde */
+  border-radius: 6px;
+  /* esquinas redondeadas */
+  text-decoration: none;
+  /* quita el subrayado del link */
+  color: inherit;
+  /* quita el azul: usa el color del texto normal */
+  cursor: pointer;
+  /* la manito al pasar el mouse */
+}
