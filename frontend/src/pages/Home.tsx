@@ -2,6 +2,7 @@ import { useMemo, useRef, useState } from "react";
 import type { Category } from "../types/service";
 import { useQuery } from "@tanstack/react-query";
 import { fetchDataProvider } from "../services/api";
+import { Link } from "react-router";
 
 export function Home() {
 
@@ -53,6 +54,13 @@ export function Home() {
           >
             X
           </button>
+          <Link
+            to={'/login'}
+            className="btn"
+            style={{ margin: '10px' }}
+          >
+            Iniciar sesion
+          </Link>
         </div>
       </section>
       <section id='resultList'>
