@@ -11,7 +11,7 @@ const firebaseConfig = {
   appId: "1:426539063370:web:a86e465666a6bc9a3aaeb3",
   measurementId: "G-7Z8G0CSBVK"
 };
-
+// aca se hace la CONEXIÓN con el proyecto (apiKey) y exporta `auth`
 const app = initializeApp(firebaseConfig);
 
 export const auth = getAuth(app);
