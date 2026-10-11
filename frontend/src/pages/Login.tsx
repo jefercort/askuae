@@ -2,6 +2,7 @@ import { Navigate, useNavigate } from "react-router";
 import { loginWithGoogle } from "../services/auth";
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import { ensureUserProfile } from "../services/users";
 
 export function Login() {
 
@@ -17,7 +18,9 @@ export function Login() {
     // esto para asegurar que si el primer intento falla y el otro funciona entonces el error no quede pegado
     setLoginError(null);
     try {
-      await loginWithGoogle();
+      const responseGoogle = await loginWithGoogle();
+      // aca asegura que exista o no el usuario para crearlo o no
+      await ensureUserProfile(responseGoogle, 'GOOGLE');
       // cuando el inicio de sesion es exitoso entonces se devuelve al home
       navigate('/');
     } catch (error) {
