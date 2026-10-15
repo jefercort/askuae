@@ -3,10 +3,14 @@ import type { AuthProviderPayload, CreateUserPayload, UserProfile } from "../typ
 
 const API_URL = import.meta.env.VITE_BACKEND_API_URL;
 
-const createUser = async (payload: CreateUserPayload): Promise<UserProfile> => {
+const createUser = async (payload: CreateUserPayload, token: string): Promise<UserProfile> => {
   const userResponse = await fetch(`${API_URL}/users`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      // acá agrego authorization para pasarle el token con la palabra Bearer para que sea spliteado en el guard
+      Authorization: `Bearer ${token}`
+    },
     body: JSON.stringify(payload),
   });
 
@@ -21,9 +25,14 @@ const createUser = async (payload: CreateUserPayload): Promise<UserProfile> => {
   return await userResponse.json();
 }
 
-const getUserByEmail = async (email: string): Promise<UserProfile | null> => {
+const getUserByEmail = async (email: string, token: string): Promise<UserProfile | null> => {
   // cuando el email viene con caracteres especiales entonces usamos encodeURIComponent para que sea procesado y leido correctamente
-  const emailResponse = await fetch(`${API_URL}/users/${encodeURIComponent(email)}`);
+  const emailResponse = await fetch(`${API_URL}/users/${encodeURIComponent(email)}`, {
+    headers: {
+      // acá agrego authorization para pasarle el token con la palabra Bearer para que sea spliteado en el guard
+      Authorization: `Bearer ${token}`
+    }
+  });
 
   if (emailResponse.status === 404) return null;
 
@@ -41,8 +50,8 @@ export const ensureUserProfile = async (firebaseUser: FirebaseUser, authProvider
   if (!firebaseUser.email) {
     throw new Error('La cuenta de Firebase no tiene email');
   }
-
-  const existUser = await getUserByEmail(firebaseUser.email);
+  const token = await firebaseUser.getIdToken();
+  const existUser = await getUserByEmail(firebaseUser.email, token);
 
   if (existUser) return existUser;
 
@@ -54,6 +63,6 @@ export const ensureUserProfile = async (firebaseUser: FirebaseUser, authProvider
     firebaseUid: firebaseUser.uid,
   };
 
-  return await createUser(payload);
+  return await createUser(payload, token);
 
 }
