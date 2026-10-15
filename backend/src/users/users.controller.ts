@@ -7,15 +7,17 @@ import {
   Param,
   Delete,
   ParseUUIDPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { FirebaseAuthGuard } from '../firebase/firebase-auth.guard';
 
+@UseGuards(FirebaseAuthGuard)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
-
   @Post()
   // acá el controlador recibe los datos en formato json en DTO verifica que tengan la estructura correcta
   create(@Body() createUserDto: CreateUserDto) {
