@@ -5,13 +5,8 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { FirebaseService } from './firebase.service';
-import { DecodedIdToken } from 'firebase-admin/auth';
-import { Request } from 'express';
+import { AuthenticatedRequest } from './authenticated-request.interface';
 
-// la Request de Express no sabe que yo le agrego user, por eso la extiendo
-interface AuthenticatedRequest extends Request {
-  user?: DecodedIdToken;
-}
 // UN GUARD en NESTJS es una clase con un solo metodo obligatorio decide si la request llega al controller; corre antes de los pipes
 @Injectable()
 export class FirebaseAuthGuard implements CanActivate {
@@ -20,7 +15,7 @@ export class FirebaseAuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     // como el context de NestJS es generico tengo que indicarle que es HTTP
     const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
-    // el frontend manda el header Authorization: Bearer<token>
+    // el frontend manda el header Authorization: Bearer <token>
     const authHeader = request.headers.authorization;
 
     if (!authHeader) {

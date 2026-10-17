@@ -13,10 +13,19 @@ export class UsersService {
   // utilizo este constructor para que traiga todas las capcidades de PrismaService
   constructor(private readonly prisma: PrismaService) {}
 
-  async createUser(createUserDto: CreateUserDto) {
+  async createUser(
+    createUserDto: CreateUserDto,
+    firebaseUid: string,
+    emailUser: string,
+  ) {
     // aca uso el try catch porque si uso un if la respuesta nunca va a llegar y si hay un error no lo voy a detectar
     try {
-      return await this.prisma.user.create({ data: createUserDto });
+      const completeData = {
+        ...createUserDto,
+        emailUser,
+        firebaseUid,
+      };
+      return await this.prisma.user.create({ data: completeData });
     } catch (error) {
       // cuando la funcion choque con emailUser y con firebaseUid entonces se debe verificar lo siguiente
       // 1 que el error viene de prisma por eso el instanceof
@@ -36,10 +45,10 @@ export class UsersService {
     return await this.prisma.user.findMany();
   }
 
-  async findUser(emailUser: string) {
+  async findUserByFirebaseUid(uid: string) {
     const foundUser = await this.prisma.user.findUnique({
       where: {
-        emailUser: emailUser,
+        firebaseUid: uid,
       },
     });
     if (!foundUser) {

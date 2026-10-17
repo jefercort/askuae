@@ -25,24 +25,23 @@ const createUser = async (payload: CreateUserPayload, token: string): Promise<Us
   return await userResponse.json();
 }
 
-const getUserByEmail = async (email: string, token: string): Promise<UserProfile | null> => {
-  // cuando el email viene con caracteres especiales entonces usamos encodeURIComponent para que sea procesado y leido correctamente
-  const emailResponse = await fetch(`${API_URL}/users/${encodeURIComponent(email)}`, {
+const getMyProfile = async (token: string): Promise<UserProfile | null> => {
+  const profileResponse = await fetch(`${API_URL}/users/me`, {
     headers: {
       // acá agrego authorization para pasarle el token con la palabra Bearer para que sea spliteado en el guard
       Authorization: `Bearer ${token}`
     }
   });
 
-  if (emailResponse.status === 404) return null;
+  if (profileResponse.status === 404) return null;
 
-  if (!emailResponse.ok) {
-    const errorBody = await emailResponse.json();
+  if (!profileResponse.ok) {
+    const errorBody = await profileResponse.json();
     const messageError = Array.isArray(errorBody.message) ? errorBody.message.join(', ') : errorBody.message;
     throw new Error(messageError);
   }
 
-  return await emailResponse.json();
+  return await profileResponse.json();
 }
 
 export const ensureUserProfile = async (firebaseUser: FirebaseUser, authProvider: AuthProviderPayload): Promise<UserProfile> => {
@@ -51,16 +50,14 @@ export const ensureUserProfile = async (firebaseUser: FirebaseUser, authProvider
     throw new Error('La cuenta de Firebase no tiene email');
   }
   const token = await firebaseUser.getIdToken();
-  const existUser = await getUserByEmail(firebaseUser.email, token);
+  const existUser = await getMyProfile(token);
 
   if (existUser) return existUser;
 
   const payload: CreateUserPayload = {
     nameUser: firebaseUser.displayName ?? firebaseUser.email.split('@')[0],
-    emailUser: firebaseUser.email,
     profileImg: firebaseUser.photoURL ?? undefined,
     authProvider,
-    firebaseUid: firebaseUser.uid,
   };
 
   return await createUser(payload, token);
