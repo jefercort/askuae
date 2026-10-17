@@ -1,5 +1,4 @@
 import {
-  IsEmail,
   IsEnum,
   IsNotEmpty,
   IsOptional,
@@ -15,11 +14,6 @@ export class CreateUserDto {
   @MaxLength(255)
   nameUser!: string;
 
-  @IsNotEmpty()
-  @IsEmail()
-  @MaxLength(255)
-  emailUser!: string;
-
   @IsUrl()
   @IsOptional()
   @MaxLength(255)
@@ -28,9 +22,4 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsEnum(AuthProvider)
   authProvider!: AuthProvider;
-
-  @IsString()
-  @IsNotEmpty()
-  @MaxLength(255)
-  firebaseUid!: string;
 }
