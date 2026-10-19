@@ -57,12 +57,12 @@ export class UsersService {
     return foundUser;
   }
 
-  async updateUser(id: string, updateUserDto: UpdateUserDto) {
+  async updateUser(firebaseUid: string, updateUserDto: UpdateUserDto) {
     try {
       return await this.prisma.user.update({
         data: updateUserDto,
         where: {
-          id: id,
+          firebaseUid: firebaseUid,
         },
       });
     } catch (error) {
@@ -73,7 +73,6 @@ export class UsersService {
         throw new NotFoundException('El usuario no existe para editarlo'); //Error 404
       }
       // si se vuelve editable un campo @unique, atrapar también P2002.
-
       throw error;
     }
   }
