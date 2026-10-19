@@ -57,15 +57,15 @@ export class UsersController {
     return this.usersService.findUserByFirebaseUid(user.uid);
   }
 
-  @Patch(':id')
-  update(
-    // valida que el id tenga formato UUID; si no, responde 400 en vez de que Postgres falle con un 500
-    @Param('id', ParseUUIDPipe) id: string,
+  @Patch('me')
+  updateMyProfile(
     @Body() updateUserDto: UpdateUserDto,
+    @CurrentUser() user: DecodedIdToken,
   ) {
-    return this.usersService.updateUser(id, updateUserDto);
+    return this.usersService.updateUser(user.uid, updateUserDto);
   }
 
+  @RequireRoles(Role.ADMIN)
   @Delete(':id')
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.usersService.removeUser(id);
