@@ -5,9 +5,10 @@ import { NegociosModule } from './negocios/negocios.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { UsersModule } from './users/users.module';
 import { FirebaseModule } from './firebase/firebase.module';
+import { ServiceProvidersModule } from './service-providers/service-providers.module';
 
 @Module({
-  imports: [NegociosModule, PrismaModule, UsersModule, FirebaseModule],
+  imports: [NegociosModule, PrismaModule, UsersModule, FirebaseModule, ServiceProvidersModule],
   controllers: [AppController],
   providers: [AppService],
 })

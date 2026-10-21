@@ -6,16 +6,6 @@ datasource db {
   provider = "postgresql"
 }
 
-enum City {
-  ABU_DHABI
-  DUBAI
-  SHARJAH
-  AJMAN
-  UMM_AL_QUWAIN
-  RAS_AL_KHAIMAH
-  FUJAIRAH
-}
-
 enum AuthProvider {
   GOOGLE
   MICROSOFT
@@ -26,6 +16,16 @@ enum AuthProvider {
 enum Role {
   USER
   ADMIN
+}
+
+enum City {
+  ABU_DHABI
+  DUBAI
+  SHARJAH
+  AJMAN
+  UMM_AL_QUWAIN
+  RAS_AL_KHAIMAH
+  FUJAIRAH
 }
 
 model User {
@@ -59,7 +59,7 @@ model ServiceProvider {
   address          String?           @db.VarChar(255)
   rating           Decimal?          @db.Decimal(2, 1)
   reviewCount      Int               @default(0)
-  mapsUrl          String?           @db.VarChar(255)
+  mapsUrl          String?           @db.VarChar(2048)
   reviews          Review[]
   serviceOfferings ServiceOffering[]
 
