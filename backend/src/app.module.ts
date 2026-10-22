@@ -8,7 +8,13 @@ import { FirebaseModule } from './firebase/firebase.module';
 import { ServiceProvidersModule } from './service-providers/service-providers.module';
 
 @Module({
-  imports: [NegociosModule, PrismaModule, UsersModule, FirebaseModule, ServiceProvidersModule],
+  imports: [
+    NegociosModule,
+    PrismaModule,
+    UsersModule,
+    FirebaseModule,
+    ServiceProvidersModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
