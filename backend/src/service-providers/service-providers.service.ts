@@ -4,6 +4,24 @@ import { UpdateServiceProviderDto } from './dto/update-service-provider.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma } from '@prisma/client';
 
+// Aca estoy aplicando el DRY rule (Don't Repeat Yourself) y lo hago para que se mantenga la decision en este solo lugar, ya que se usa en varias funciones y tambien evito que se tengan que crear dos objetos diferentes al llamar serviceOfferings
+// aca utilizo satisfies para que revise que el objeto sea un include valido y conserva el tipo exacto que impuse
+const publicServiceProviderInclude = {
+  serviceOfferings: {
+    select: {
+      id: true,
+      title: true,
+      category: {
+        select: {
+          name: true,
+        },
+      },
+      price: true,
+      description: true,
+    },
+  },
+} satisfies Prisma.ServiceProviderInclude;
+
 @Injectable()
 export class ServiceProvidersService {
   constructor(private readonly prisma: PrismaService) {}
@@ -35,12 +53,30 @@ export class ServiceProvidersService {
     }
   }
 
-  findAll() {
-    return `This action returns all serviceProviders`;
+  async findAllServiceProviders() {
+    const result = await this.prisma.serviceProvider.findMany({
+      orderBy: {
+        rating: {
+          sort: 'desc',
+          nulls: 'last',
+        },
+      },
+      include: publicServiceProviderInclude,
+    });
+    return result;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} serviceProvider`;
+  async findServiceProviderById(id: string) {
+    const foundServProv = await this.prisma.serviceProvider.findUnique({
+      where: {
+        id: id,
+      },
+      include: publicServiceProviderInclude,
+    });
+    if (!foundServProv) {
+      throw new NotFoundException('El proveedor de servicio no existe');
+    }
+    return foundServProv;
   }
 
   update(id: number, updateServiceProviderDto: UpdateServiceProviderDto) {

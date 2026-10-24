@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { ServiceProvidersService } from './service-providers.service';
 import { CreateServiceProviderDto } from './dto/create-service-provider.dto';
@@ -34,12 +35,13 @@ export class ServiceProvidersController {
 
   @Get()
   findAll() {
-    return this.serviceProvidersService.findAll();
+    return this.serviceProvidersService.findAllServiceProviders();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.serviceProvidersService.findOne(+id);
+  // aca uso ParseUUIDPipe porque si envian algo como  /service-providers/hola va detectarlo como si fuera un error de tipo que daria 500, pero parseandolo se descarta que sea un error del Backend donde es un error del cliente 400
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
+    return this.serviceProvidersService.findServiceProviderById(id);
   }
 
   @Patch(':id')
