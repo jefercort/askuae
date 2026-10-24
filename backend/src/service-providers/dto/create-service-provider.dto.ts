@@ -8,13 +8,19 @@ import {
   IsPhoneNumber,
   IsString,
   IsUrl,
+  Matches,
   MaxLength,
+  MinLength,
 } from 'class-validator';
 
 export class CreateServiceProviderDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(255)
+  //Esta lo estoy usando para prevenir abuso de un borrado disfrazado
+  @MinLength(3)
+  //Este lo uso para que contenga al menos una letra en cualquier idioma
+  @Matches(/\p{L}/u)
   name!: string;
 
   @IsEmail()

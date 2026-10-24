@@ -44,12 +44,18 @@ export class ServiceProvidersController {
     return this.serviceProvidersService.findServiceProviderById(id);
   }
 
+  @UseGuards(FirebaseAuthGuard)
   @Patch(':id')
   update(
-    @Param('id') id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() updateServiceProviderDto: UpdateServiceProviderDto,
+    @CurrentUser() user: DecodedIdToken,
   ) {
-    return this.serviceProvidersService.update(+id, updateServiceProviderDto);
+    return this.serviceProvidersService.updateServiceProvider(
+      id,
+      user.uid,
+      updateServiceProviderDto,
+    );
   }
 
   @Delete(':id')
