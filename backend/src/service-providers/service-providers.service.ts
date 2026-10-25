@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateServiceProviderDto } from './dto/create-service-provider.dto';
 import { UpdateServiceProviderDto } from './dto/update-service-provider.dto';
 import { PrismaService } from '../prisma/prisma.service';
@@ -24,7 +28,7 @@ const publicServiceProviderInclude = {
 
 @Injectable()
 export class ServiceProvidersService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   private async assertCanManageServiceProvider(
     serviceProviderId: string,
@@ -129,9 +133,5 @@ export class ServiceProvidersService {
       },
       include: publicServiceProviderInclude,
     });
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} serviceProvider`;
   }
 }

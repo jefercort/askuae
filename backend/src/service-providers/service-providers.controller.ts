@@ -5,7 +5,6 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
   UseGuards,
   ParseUUIDPipe,
 } from '@nestjs/common';
@@ -56,10 +55,5 @@ export class ServiceProvidersController {
       user.uid,
       updateServiceProviderDto,
     );
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.serviceProvidersService.remove(+id);
   }
 }
