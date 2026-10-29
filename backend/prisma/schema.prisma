@@ -18,6 +18,16 @@ enum Role {
   ADMIN
 }
 
+enum City {
+  ABU_DHABI
+  DUBAI
+  SHARJAH
+  AJMAN
+  UMM_AL_QUWAIN
+  RAS_AL_KHAIMAH
+  FUJAIRAH
+}
+
 model User {
   id               String            @id @default(uuid()) @db.Uuid
   firebaseUid      String            @unique @db.VarChar(255)
@@ -33,7 +43,7 @@ model User {
 
 model ServiceProvider {
   id               String            @id @default(uuid()) @db.Uuid
-  userId           String            @db.Uuid
+  userId           String?           @db.Uuid
   name             String            @db.VarChar(255)
   email            String?           @db.VarChar(255)
   phone1           String?           @db.VarChar(255)
@@ -45,14 +55,15 @@ model ServiceProvider {
   instaUrl         String?           @db.VarChar(255)
   tiktokUrl        String?           @db.VarChar(255)
   websiteUrl       String?           @db.VarChar(255)
+  city             City
   address          String?           @db.VarChar(255)
   rating           Decimal?          @db.Decimal(2, 1)
-  reviewCount      Int?
-  mapsUrl          String?           @db.VarChar(255)
+  reviewCount      Int               @default(0)
+  mapsUrl          String?           @db.VarChar(2048)
   reviews          Review[]
   serviceOfferings ServiceOffering[]
 
-  user User @relation(fields: [userId], references: [id])
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 }
 
 model ServiceOffering {
@@ -69,8 +80,8 @@ model ServiceOffering {
 
 model ServiceCategory {
   id               String            @id @default(uuid()) @db.Uuid
-  name             String            @db.VarChar(255)
-  iconUrl          String            @db.VarChar(255)
+  name             String            @unique @db.VarChar(255)
+  icon             String            @db.VarChar(255)
   serviceOfferings ServiceOffering[]
 }
 
