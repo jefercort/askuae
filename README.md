@@ -78,7 +78,7 @@ The Firebase web config lives in `frontend/src/config/firebase.ts`. Replace thos
 - [x] Google sign-in and user profile creation in the backend
 - [x] Data model and migrations with Prisma
 - [ ] Replace the frontend mock data with the real API
-- [ ] CRUD for providers, categories and services
+- [x] CRUD for providers, categories and services
 - [ ] User reviews
 - [ ] Search and filters by category and city
 - [ ] Deployment
