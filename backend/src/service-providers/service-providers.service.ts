@@ -30,7 +30,7 @@ const publicServiceProviderInclude = {
 export class ServiceProvidersService {
   constructor(private readonly prisma: PrismaService) {}
 
-  private async assertCanManageServiceProvider(
+  async assertCanManageServiceProvider(
     serviceProviderId: string,
     firebaseUid: string,
   ) {

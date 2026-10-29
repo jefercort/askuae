@@ -8,5 +8,6 @@ import { PrismaModule } from '../prisma/prisma.module';
   imports: [PrismaModule, FirebaseModule],
   controllers: [ServiceProvidersController],
   providers: [ServiceProvidersService],
+  exports: [ServiceProvidersService],
 })
 export class ServiceProvidersModule {}
