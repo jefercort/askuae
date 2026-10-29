@@ -6,6 +6,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { UsersModule } from './users/users.module';
 import { FirebaseModule } from './firebase/firebase.module';
 import { ServiceProvidersModule } from './service-providers/service-providers.module';
+import { ServiceOfferingsModule } from './service-offerings/service-offerings.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { ServiceProvidersModule } from './service-providers/service-providers.mo
     UsersModule,
     FirebaseModule,
     ServiceProvidersModule,
+    ServiceOfferingsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
