@@ -1,0 +1,2 @@
+# normaliza todo texto a LF dentro del repo y en el working tree
+* text=auto eol=lf
