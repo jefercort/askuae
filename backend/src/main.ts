@@ -24,4 +24,8 @@ async function bootstrap() {
 
   await app.listen(process.env.BACKEND_PORT ?? 3000);
 }
-bootstrap();
+// Si falla al arrancar lo muestro y salgo con codigo de error
+bootstrap().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});
